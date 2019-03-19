@@ -1,5 +1,3 @@
-![](https://s3.eu-west-2.amazonaws.com/minimal-compact/images/mc-thumbor.png "MinimalCompact Thumbor")
-
 # Minimal Compact thumbor
 
 The quickest way to run [thumbor](https://github.com/thumbor/thumbor).
@@ -16,14 +14,14 @@ Key Features and Goals:
 ## Quick Start
 
 ```
-$ docker run -p 80:80 minimalcompact/thumbor
+$ docker run -p 80:80 ehlertij/thumbor
 $ wget http://localhost/unsafe/500x150/i.imgur.com/Nfn80ck.png
 ```
 
 multi-process
 
 ```
-$ docker run -p 80:80 -e THUMBOR_NUM_PROCESSES=8 minimalcompact/thumbor
+$ docker run -p 80:80 -e THUMBOR_NUM_PROCESSES=8 ehlertij/thumbor
 $ wget http://localhost/unsafe/500x150/i.imgur.com/Nfn80ck.png
 
 ```

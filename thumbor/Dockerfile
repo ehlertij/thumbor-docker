@@ -1,6 +1,6 @@
 FROM python:2
 
-LABEL maintainer="MinimalCompact"
+LABEL maintainer="ehlertij"
 
 VOLUME /data
 
@@ -33,6 +33,8 @@ ENV SHELL bash
 ENV WORKON_HOME /app
 WORKDIR /app
 
+RUN pip install git+git://github.com/ehlertij/thumbor.git@lossless-webp
+
 COPY requirements.txt /app/requirements.txt
 RUN pip install --trusted-host None --no-cache-dir \
    -r /app/requirements.txt
@@ -46,26 +48,6 @@ ADD conf/thumbor-circus.ini.tpl /etc/circus.d/
 RUN \
     ln /usr/lib/python2.7/dist-packages/cv2.x86_64-linux-gnu.so /usr/local/lib/python2.7/cv2.so && \
     ln /usr/lib/python2.7/dist-packages/cv.py /usr/local/lib/python2.7/cv.py
-
-ARG SIMD_LEVEL
-# workaround for https://github.com/python-pillow/Pillow/issues/3441
-# https://github.com/thumbor/thumbor/issues/1102
-RUN if [ -z "$SIMD_LEVEL" ]; then \
-    PILLOW_VERSION=$(python -c 'import PIL; print(PIL.__version__)') && \
-    pip uninstall -y pillow || true && \
-    # https://github.com/python-pillow/Pillow/pull/3241
-    LIB=/usr/lib/x86_64-linux-gnu/ \
-    # https://github.com/python-pillow/Pillow/pull/3237 or https://github.com/python-pillow/Pillow/pull/3245
-    INCLUDE=/usr/include/x86_64-linux-gnu/ \
-    pip install --no-cache-dir -U --force-reinstall --no-binary=:all: "pillow<=$PILLOW_VERSION" \
-    # --global-option="build_ext" --global-option="--debug" \
-    --global-option="build_ext" --global-option="--enable-lcms" \
-    --global-option="build_ext" --global-option="--enable-zlib" \
-    --global-option="build_ext" --global-option="--enable-jpeg" \
-    --global-option="build_ext" --global-option="--enable-tiff" \
-    ; fi
-RUN if [ -n "$SIMD_LEVEL" ]; then apt-get install -y -q libjpeg-dev zlib1g-dev; fi
-RUN if [ -n "$SIMD_LEVEL" ]; then pip uninstall -y pillow; CC="cc -m$SIMD_LEVEL" LDFLAGS=-L/usr/lib/x86_64-linux-gnu/ pip install --no-cache-dir -U --force-reinstall Pillow-SIMD==5.2.0.post0; fi
 
 COPY docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]
