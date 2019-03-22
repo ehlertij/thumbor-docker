@@ -33,7 +33,7 @@ ENV SHELL bash
 ENV WORKON_HOME /app
 WORKDIR /app
 
-RUN pip install git+git://github.com/ehlertij/thumbor.git@lossless-webp
+RUN pip install git+git://github.com/ehlertij/thumbor.git
 
 COPY requirements.txt /app/requirements.txt
 RUN pip install --trusted-host None --no-cache-dir \
