@@ -33,7 +33,7 @@ ENV SHELL bash
 ENV WORKON_HOME /app
 WORKDIR /app
 
-RUN pip install git+git://github.com/ehlertij/thumbor.git
+RUN pip install git+git://github.com/ehlertij/graphicsmagick-engine.git
 
 COPY requirements.txt /app/requirements.txt
 RUN pip install --trusted-host None --no-cache-dir \
